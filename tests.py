@@ -1,6 +1,9 @@
 import node_classes
 import pytest
 import table_class
+import figure_classes
+import numpy as np
+import logging
 
 
 class TestNodeClasses:
@@ -120,3 +123,32 @@ class TestTable:
             []
         )
         assert not table.solve()
+
+
+class TestFigures:
+    def test_figure(self):
+        figure = figure_classes.Figure(np.array([[True, True], [True, False]]))
+        assert figure.area == 3
+        board = figure_classes.Board(3, 3)
+        logging.debug(str(board.table))
+        assert board.table[0][0] == '0-0'
+        positions = figure.possible_positions(board)
+        assert len(positions) == 4
+        assert positions[0] == ['0-0', '0-1', '1-0']
+        logging.debug(str(positions))
+
+    def test_rectangle(self):
+        rectangle = figure_classes.Rectangle(2, 3)
+        assert rectangle.area == 6
+        board = figure_classes.Board(3, 3)
+        positions = rectangle.possible_positions(board)
+        assert len(positions) == 4
+        logging.debug(str(positions))
+
+    def test_l_shaped(self):
+        l_shaped = figure_classes.LShaped(2, 3)
+        assert l_shaped.area == 4
+        board = figure_classes.Board(3, 3)
+        positions = l_shaped.possible_positions(board)
+        assert len(positions) == 8
+        logging.debug(str(positions))

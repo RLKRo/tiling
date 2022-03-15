@@ -16,11 +16,13 @@ class Table:
         """
         self.header: node_classes.Node = node_classes.Node('header')
         self.column_map: dict[str, node_classes.Node] = {}
+        column_names.sort()
         for name in column_names:
             column = node_classes.Column(name)
             column.insert_after(self.header.left)
             self.column_map[name] = column
         for row in rows:
+            row.sort()
             last_inserted = None
             for column_name in row:
                 node = node_classes.Node()

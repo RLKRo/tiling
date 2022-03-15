@@ -4,6 +4,9 @@ import logging
 
 
 class Board:
+    """
+    A 2D str array. Each cell is a concatenation of its row and column number with a separator.
+    """
     def __init__(self, height: int, width: int):
         self.area = height * width
         self.table: npt.NDArray[object] = np.empty(shape=(height, width), dtype=object)
@@ -28,8 +31,7 @@ class Figure:
         """
         axis0_dif = board.table.shape[0] - self.array.shape[0]
         axis1_dif = board.table.shape[1] - self.array.shape[1]
-        if axis0_dif < 0 or axis1_dif < 0:
-            return []
+        assert axis0_dif >= 0 and axis1_dif >= 0, 'cannot fit shapes on the board'
         answer = []
         for i in range(axis0_dif + 1):
             for j in range(axis1_dif + 1):
@@ -39,6 +41,9 @@ class Figure:
 
 
 class Rectangle(Figure):
+    """
+    Creates a Figure instance based on the parameters. Possible positions include rotations.
+    """
     def __init__(self, height, width):
         array = np.full(shape=(height, width), fill_value=True)
         super(Rectangle, self).__init__(array)
@@ -51,6 +56,9 @@ class Rectangle(Figure):
 
 
 class LShaped(Figure):
+    """
+    Creates a Figure instance based on the parameters. Possible positions include rotations.
+    """
     def __init__(self, left_length, down_length):
         array = np.full(shape=(left_length, down_length), fill_value=False)
         for i in range(left_length):

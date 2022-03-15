@@ -2,6 +2,7 @@ import node_classes
 import pytest
 import table_class
 import figure_classes
+import main
 import numpy as np
 import logging
 
@@ -152,3 +153,23 @@ class TestFigures:
         positions = l_shaped.possible_positions(board)
         assert len(positions) == 8
         logging.debug(str(positions))
+
+        l_shaped = figure_classes.LShaped(1, 4)
+        with pytest.raises(AssertionError):
+            positions = l_shaped.possible_positions(board)
+
+
+class TestMain:
+    def test_main(self):
+        assert main.main(
+            board_params=(3, 5),
+            rectangle_params=[((2, 2), 1)],
+            l_shaped_params=[((3, 2), 1), ((2, 2), 2)]
+        )
+
+    def test_set_1(self):
+        assert main.main((3, 3), [], [])
+        assert not main.main((3, 3), [((4, 4), 1)], [])
+        assert not main.main((3, 3), [], [((1, 4), 1)])
+        assert main.main((4, 4,), [((2, 2), 4)], [])
+        assert not main.main((4, 4), [((2, 2), 5)], [])

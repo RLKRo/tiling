@@ -31,23 +31,6 @@ class Table:
                     node.insert_after(last_inserted)
                 last_inserted = node
 
-    def print_table(self):
-        visited = []
-        for column in node_classes.NodeIterator(self.header, 'right'):
-            print(column.name, end=' ')
-        print('')
-        for column in node_classes.NodeIterator(self.header, 'right'):
-            print('_column_' + column.name)
-            for row in node_classes.NodeIterator(column, 'down'):
-                if row not in visited:
-                    print(row.column.name, end='<---_entry_point_')
-                    visited.append(row)
-                    for next_node in node_classes.NodeIterator(row, 'right'):
-                        print(next_node.column.name, end='<---_row_element_')
-                        visited.append(next_node)
-                    print('_end_of_row_')
-            print('_end_of_column_' + column.name)
-
     def next_column(self) -> node_classes.Column:
         """
         Selects the next column to cover as a column with the minimal size.

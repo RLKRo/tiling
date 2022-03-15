@@ -2,11 +2,13 @@ import table_class
 import figure_classes
 from ast import literal_eval
 import sys
+import logging
 
 
 def add(
         params: list[tuple[tuple[int, int], int]],
         rows: list[list[str]],
+        columns: list[str],
         board: figure_classes.Board,
         info: str,
         cls
@@ -16,6 +18,7 @@ def add(
     A unique token for each figure is created using params, info and figure counter.
     :param params: Figure parameters
     :param rows: Rows of position names and figure names
+    :param columns: New tokens are added to the columns list
     :param board:
     :param info: Figure identifier
     :param cls: Figure class
@@ -27,9 +30,12 @@ def add(
         total_area += figure.area * shape[1]
         positions = figure.possible_positions(board)
         for number in range(shape[1]):
+            token = f'{info}-{shape[0][0]}-{shape[0][1]}-{number}'
+            columns.append(token)
             for position in positions:
-                position.append(f'{info}-{shape[0][0]}-{shape[0][1]}-{number}')
-                rows.append(position)
+                position.append(token)
+                logging.debug(f'Adding row {position}')
+                rows.append(position.copy())
                 position.pop()
     return total_area
 
@@ -49,12 +55,13 @@ def main(
     :return: True if all the figures fit on the board.
     """
     board = figure_classes.Board(board_params[0], board_params[1])
+    columns = list(board.table.flatten())
     rows: list[list[str]] = []
     total_area: int = 0
     try:
         total_area +=\
-            add(rectangle_params, rows, board, 'rectangle', figure_classes.Rectangle) + \
-            add(l_shaped_params, rows, board, 'l_shaped', figure_classes.LShaped)
+            add(rectangle_params, rows, columns, board, 'rectangle', figure_classes.Rectangle) + \
+            add(l_shaped_params, rows, columns, board, 'l_shaped', figure_classes.LShaped)
     except AssertionError as e:
         return False
 
@@ -64,12 +71,15 @@ def main(
     assert board.area - total_area == add(          # Add 1x1 squares to get an exact cover problem
         params=[((1, 1), board.area - total_area)],
         rows=rows,
+        columns=columns,
         board=board,
         info='additional_squares',
         cls=figure_classes.Rectangle
     )
 
-    table = table_class.Table(board.table.flatten(), rows)
+    logging.debug(f'\n\nSolving a new task\n\nColumns:\n{columns}\nRows:\n{rows}')
+
+    table = table_class.Table(columns, rows)
 
     return table.solve()
 

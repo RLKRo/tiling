@@ -173,3 +173,10 @@ class TestMain:
         assert not main.main((3, 3), [], [((1, 4), 1)])
         assert main.main((4, 4,), [((2, 2), 4)], [])
         assert not main.main((4, 4), [((2, 2), 5)], [])
+
+    def test_set_2(self):
+        assert not main.main((3, 3), [((2, 3), 1)], [((2, 2), 1)])
+        assert not main.main((3, 4), [((2, 2), 2)], [((2, 2), 1)])
+        assert not main.main((3, 4), [((2, 2), 2)], [((2, 3), 1)])
+        assert main.main((5, 4), [((3, 3), 1), ((2, 2), 1)], [((2, 4), 1)])
+        assert main.main((5, 4), [((3, 3), 1), ((2, 2), 1)], [((4, 2), 1)])

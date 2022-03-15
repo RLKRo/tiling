@@ -17,6 +17,7 @@ class Table:
         self.header: node_classes.Node = node_classes.Node('header')
         self.column_map: dict[str, node_classes.Node] = {}
         column_names.sort()
+        assert len(column_names) == len(set(column_names))  # Check for uniqueness
         for name in column_names:
             column = node_classes.Column(name)
             column.insert_after(self.header.left)
@@ -25,6 +26,7 @@ class Table:
             row.sort()
             last_inserted = None
             for column_name in row:
+                assert column_name in column_names
                 node = node_classes.Node()
                 node.insert_above(self.column_map[column_name])
                 if last_inserted is not None:
